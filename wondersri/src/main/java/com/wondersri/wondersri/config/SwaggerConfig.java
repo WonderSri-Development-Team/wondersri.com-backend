@@ -21,3 +21,5 @@ public class SwaggerConfig {
     }
 
 }
+//swagger url:
+//http://localhost:8081/swagger-ui.html#/
