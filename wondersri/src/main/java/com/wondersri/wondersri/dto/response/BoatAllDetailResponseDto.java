@@ -1,38 +1,11 @@
-package com.wondersri.wondersri.dto.request;
+package com.wondersri.wondersri.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-
-public class BoatSaveRequestDTO {
-
+public class BoatAllDetailResponseDto {
     private Long id;
-
-    @NotBlank(message = "Name is required")
     private String name;
-
-    @Positive(message = "Capacity must be a positive number")
     private int capacity;
-
     private String description;
-
-    @NotBlank(message = "Location is required")
     private String location;
-
-    public BoatSaveRequestDTO() {
-    }
-
-    public BoatSaveRequestDTO(Long id, String name, int capacity, String description, String location) {
-        this.id = id;
-        this.name = name;
-        this.capacity = capacity;
-        this.description = description;
-        this.location = location;
-    }
 
     public void setId(Long id) {
         this.id = id;
@@ -72,5 +45,16 @@ public class BoatSaveRequestDTO {
 
     public String getLocation() {
         return location;
+    }
+
+    public BoatAllDetailResponseDto() {
+    }
+
+    public BoatAllDetailResponseDto(Long id, String name, int capacity, String description, String location) {
+        this.id = id;
+        this.name = name;
+        this.capacity = capacity;
+        this.description = description;
+        this.location = location;
     }
 }
