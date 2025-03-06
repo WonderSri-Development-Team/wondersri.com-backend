@@ -1,4 +1,5 @@
 package com.wondersri.wondersri.service.Impl;
+
 import com.wondersri.wondersri.Util.CodeGenerator;
 import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
@@ -11,7 +12,9 @@ import com.wondersri.wondersri.exception.ResourceNotFoundException;
 import com.wondersri.wondersri.repo.BoatRepository;
 import com.wondersri.wondersri.repo.BookingRepository;
 import com.wondersri.wondersri.service.BookingService;
+import com.wondersri.wondersri.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,38 +31,52 @@ public class BookingServiceImpl implements BookingService {
     private BoatRepository boatRepository;
     @Autowired
     private CodeGenerator codeGenerator;
-
+    @Autowired
+    private EmailService emailService;
     private static final int TWO_MONTHS_IN_DAYS = 60;
+
     private boolean isTimeSlotAvailable(LocalDate date, TimeSlot timeSlot) {
         return bookingRepository.findByBookingDateAndTimeSlot(date, timeSlot).isEmpty();
     }
+
     @Override
     public Booking saveBooking(BookingSaveRequestDTO bookingSaveRequestDTO) {
         Boat boat = boatRepository.findById(bookingSaveRequestDTO.getBoatId())
                 .orElseThrow(() -> new IllegalArgumentException("Boat not found with ID: " + bookingSaveRequestDTO.getBoatId()));
 
-        // Validate the time slot availability
         if (!isTimeSlotAvailable(bookingSaveRequestDTO.getBookingDate(), bookingSaveRequestDTO.getTimeSlot())) {
             throw new IllegalArgumentException("Time slot " + bookingSaveRequestDTO.getTimeSlot() + " is already booked for " + bookingSaveRequestDTO.getBookingDate());
         }
 
-        // Convert BookingRequestDTO to Booking entity
         Booking booking = new Booking();
-        booking.setBoat(boat); // Set the Boat entity
+        booking.setBoat(boat);
         booking.setUserName(bookingSaveRequestDTO.getUserName());
         booking.setUserEmail(bookingSaveRequestDTO.getUserEmail());
         booking.setUserPhone(bookingSaveRequestDTO.getUserPhone());
         booking.setBookingDate(bookingSaveRequestDTO.getBookingDate());
         booking.setTimeSlot(bookingSaveRequestDTO.getTimeSlot());
-
-        // Generate a unique booking code
-        booking.setBookingCode(codeGenerator.generateUniqueBookingCode());
-
-        // Set default status
+        String bookingCode = codeGenerator.generateUniqueBookingCode();
+        booking.setBookingCode(bookingCode);
         booking.setStatus("confirmed");
 
-        // Save the booking
-        return bookingRepository.save(booking);
+        bookingRepository.save(booking);
+
+        try {
+            emailService.sendBookingConfirmationEmail(
+                    booking.getUserEmail(),
+                    booking.getBookingCode(),
+                    booking.getUserName(),
+                    boat.getName(),
+                    boat.getLocation(),
+                    booking.getBookingDate().toString(),
+                    booking.getTimeSlot().toString()
+            );
+        } catch (MailAuthenticationException e) {
+            System.err.println("Email authentication failed: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected error sending email: " + e.getMessage());
+        }
+        return booking;
     }
 
     @Override
@@ -85,32 +102,32 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<AvailableSlotsResponseDTO> getAvailableSlots() {
-            List<AvailableSlotsResponseDTO> availableSlots = new ArrayList<>();
-            LocalDate tomorrow = LocalDate.now().plusDays(1); // Start from tomorrow
+        List<AvailableSlotsResponseDTO> availableSlots = new ArrayList<>();
+        LocalDate tomorrow = LocalDate.now().plusDays(1); // Start from tomorrow
 
-            // Get all possible time slots
-            List<TimeSlot> allTimeSlots = Arrays.asList(TimeSlot.values());
+        // Get all possible time slots
+        List<TimeSlot> allTimeSlots = Arrays.asList(TimeSlot.values());
 
-            // Check availability for the next 2 months (60 days)
-            for (int i = 0; i < TWO_MONTHS_IN_DAYS; i++) {
-                LocalDate date = tomorrow.plusDays(i);
-                List<Booking> bookingsForDate = bookingRepository.findByBookingDate(date);
+        // Check availability for the next 2 months (60 days)
+        for (int i = 0; i < TWO_MONTHS_IN_DAYS; i++) {
+            LocalDate date = tomorrow.plusDays(i);
+            List<Booking> bookingsForDate = bookingRepository.findByBookingDate(date);
 
-                // Get booked time slots for this date
-                List<TimeSlot> bookedSlots = bookingsForDate.stream()
-                        .map(Booking::getTimeSlot)
-                        .collect(Collectors.toList());
+            // Get booked time slots for this date
+            List<TimeSlot> bookedSlots = bookingsForDate.stream()
+                    .map(Booking::getTimeSlot)
+                    .collect(Collectors.toList());
 
-                // Filter out booked slots to get available slots
-                List<TimeSlot> availableTimeSlots = allTimeSlots.stream()
-                        .filter(slot -> !bookedSlots.contains(slot))
-                        .collect(Collectors.toList());
+            // Filter out booked slots to get available slots
+            List<TimeSlot> availableTimeSlots = allTimeSlots.stream()
+                    .filter(slot -> !bookedSlots.contains(slot))
+                    .collect(Collectors.toList());
 
-                availableSlots.add(new AvailableSlotsResponseDTO(date, availableTimeSlots));
-            }
-
-            return availableSlots;
+            availableSlots.add(new AvailableSlotsResponseDTO(date, availableTimeSlots));
         }
+
+        return availableSlots;
+    }
 
     @Override
     public List<BookingAllDetailDTO> getAllBookings() {

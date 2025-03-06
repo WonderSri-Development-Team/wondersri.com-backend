@@ -7,11 +7,15 @@ import com.wondersri.wondersri.entity.Booking;
 import com.wondersri.wondersri.exception.ResourceNotFoundException;
 import com.wondersri.wondersri.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -19,14 +23,12 @@ public class BookingController {
 
     @Autowired
     private BookingService bookingService;
-    @PostMapping("/save")
-    public ResponseEntity<?> saveBooking(@RequestBody BookingSaveRequestDTO bookingRequestDTO) {
-        try {
-            Booking savedBooking = bookingService.saveBooking(bookingRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    @PostMapping
+    public ResponseEntity<String> saveBooking(@RequestBody BookingSaveRequestDTO bookingRequestDTO) {
+        bookingService.saveBooking(bookingRequestDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        return new ResponseEntity<>("Booking Confirmed", headers, HttpStatus.CREATED);
     }
     @GetMapping("/{bookingCode}")
     public ResponseEntity<?> getBookingByCode(@PathVariable String bookingCode) {
