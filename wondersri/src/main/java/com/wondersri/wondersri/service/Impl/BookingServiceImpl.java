@@ -1,6 +1,7 @@
 package com.wondersri.wondersri.service.Impl;
 import com.wondersri.wondersri.Util.CodeGenerator;
 import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
+import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
 import com.wondersri.wondersri.dto.response.GetBookingByCodeResponseDTO;
 import com.wondersri.wondersri.entity.Booking;
 import com.wondersri.wondersri.entity.Boat;
@@ -13,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -23,7 +28,7 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private CodeGenerator codeGenerator;
 
-
+    private static final int TWO_MONTHS_IN_DAYS = 60;
     private boolean isTimeSlotAvailable(LocalDate date, TimeSlot timeSlot) {
         return bookingRepository.findByBookingDateAndTimeSlot(date, timeSlot).isEmpty();
     }
@@ -76,4 +81,33 @@ public class BookingServiceImpl implements BookingService {
                 booking.getStatus()
         );
     }
+
+    @Override
+    public List<AvailableSlotsResponseDTO> getAvailableSlots() {
+            List<AvailableSlotsResponseDTO> availableSlots = new ArrayList<>();
+            LocalDate tomorrow = LocalDate.now().plusDays(1); // Start from tomorrow
+
+            // Get all possible time slots
+            List<TimeSlot> allTimeSlots = Arrays.asList(TimeSlot.values());
+
+            // Check availability for the next 2 months (60 days)
+            for (int i = 0; i < TWO_MONTHS_IN_DAYS; i++) {
+                LocalDate date = tomorrow.plusDays(i);
+                List<Booking> bookingsForDate = bookingRepository.findByBookingDate(date);
+
+                // Get booked time slots for this date
+                List<TimeSlot> bookedSlots = bookingsForDate.stream()
+                        .map(Booking::getTimeSlot)
+                        .collect(Collectors.toList());
+
+                // Filter out booked slots to get available slots
+                List<TimeSlot> availableTimeSlots = allTimeSlots.stream()
+                        .filter(slot -> !bookedSlots.contains(slot))
+                        .collect(Collectors.toList());
+
+                availableSlots.add(new AvailableSlotsResponseDTO(date, availableTimeSlots));
+            }
+
+            return availableSlots;
+        }
 }
