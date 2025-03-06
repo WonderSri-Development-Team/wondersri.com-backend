@@ -12,14 +12,10 @@ public class SwaggerConfig {
 
     @Bean
     public Docket swaggerApi() {
-
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.wondersri.wondersri.controller")) // Scan only controllers
+                .paths(PathSelectors.ant("/api/**")) // Limit to /api paths
                 .build();
     }
-
 }
-//swagger url:
-//http://localhost:8081/swagger-ui.html#/
