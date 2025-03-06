@@ -2,6 +2,7 @@ package com.wondersri.wondersri.service.Impl;
 import com.wondersri.wondersri.Util.CodeGenerator;
 import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
+import com.wondersri.wondersri.dto.response.BookingAllDetailDTO;
 import com.wondersri.wondersri.dto.response.GetBookingByCodeResponseDTO;
 import com.wondersri.wondersri.entity.Booking;
 import com.wondersri.wondersri.entity.Boat;
@@ -110,4 +111,25 @@ public class BookingServiceImpl implements BookingService {
 
             return availableSlots;
         }
+
+    @Override
+    public List<BookingAllDetailDTO> getAllBookings() {
+        List<Booking> bookings = bookingRepository.findAll();
+        return bookings.stream()
+                .map(booking -> {
+                    String boatName = booking.getBoat() != null ? booking.getBoat().getName() : "Unknown Boat";
+                    return new BookingAllDetailDTO(
+                            booking.getId(),
+                            boatName,
+                            booking.getUserName(),
+                            booking.getUserEmail(),
+                            booking.getUserPhone(),
+                            booking.getBookingDate(),
+                            booking.getTimeSlot(),
+                            booking.getBookingCode(),
+                            booking.getStatus()
+                    );
+                })
+                .collect(Collectors.toList());
+    }
 }
