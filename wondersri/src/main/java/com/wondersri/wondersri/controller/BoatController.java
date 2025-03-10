@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("")
 @RequestMapping("api/v1/boats")
 public class BoatController {
 
