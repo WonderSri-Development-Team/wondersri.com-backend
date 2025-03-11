@@ -8,16 +8,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@CrossOrigin
-@RequestMapping("api/v1/boats")
+@RequestMapping("/api/v1/boats")
 public class BoatController {
-
     private static final Logger logger = LoggerFactory.getLogger(BoatController.class);
 
     private final BoatService boatService;
@@ -27,23 +28,33 @@ public class BoatController {
         this.boatService = boatService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> saveBoat(@Valid @RequestBody BoatSaveRequestDTO boatSaveRequestDTO) {
+    @PostMapping("/save-boat")
+    public ResponseEntity<String> saveBoat(@Valid @ModelAttribute BoatSaveRequestDTO boatSaveRequestDTO, BindingResult result) {
         logger.info("Received request to save boat: {}", boatSaveRequestDTO);
 
-        String response = boatService.saveBoat(boatSaveRequestDTO);
-        logger.info("Boat saved successfully: {}", response);
+        if (result.hasErrors()) {
+            String errors = result.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            logger.error("Validation failed: {}", errors);
+            return new ResponseEntity<>("Validation failed: " + errors, HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try {
+            String response = boatService.saveBoat(boatSaveRequestDTO);
+            logger.info("Boat saved successfully: {}", response);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.error("Error saving boat: {}", e.getMessage(), e);
+            return new ResponseEntity<>("Error saving boat: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping
+    @GetMapping("/all-boats")
     public ResponseEntity<List<BoatAllDetailResponseDto>> getAllBoats() {
         logger.info("Received request to fetch all boats");
-
         List<BoatAllDetailResponseDto> boats = boatService.getAllBoatsDetails();
         logger.info("Fetched {} boats", boats.size());
-
         return new ResponseEntity<>(boats, HttpStatus.OK);
     }
 }

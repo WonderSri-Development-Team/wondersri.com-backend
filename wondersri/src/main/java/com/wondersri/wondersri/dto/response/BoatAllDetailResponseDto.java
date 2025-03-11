@@ -1,5 +1,7 @@
 package com.wondersri.wondersri.dto.response;
 
+import java.util.List;
+
 public class BoatAllDetailResponseDto {
     private Long id;
     private String name;
@@ -47,7 +49,7 @@ public class BoatAllDetailResponseDto {
         return location;
     }
 
-    public BoatAllDetailResponseDto() {
+    public BoatAllDetailResponseDto(Long id, String name, int capacity, String description, String location, List<String> imageUrls) {
     }
 
     public BoatAllDetailResponseDto(Long id, String name, int capacity, String description, String location) {

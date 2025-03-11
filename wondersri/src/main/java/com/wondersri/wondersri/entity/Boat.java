@@ -1,10 +1,8 @@
 package com.wondersri.wondersri.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "boats")
@@ -13,29 +11,34 @@ public class Boat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Boat() {
-    }
+    @Column(nullable = false)
+    private String name;
 
-    public Boat(Long id, String name, int capacity, String description, String location) {
+    @Column(nullable = false)
+    private int capacity;
+
+    @Column
+    private String description;
+
+    @Column(nullable = false)
+    private String location;
+
+    @OneToMany(mappedBy = "boat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
+
+    // Constructors
+    public Boat() {}
+
+    public Boat(Long id, String name, int capacity, String description, String location, List<Image> images) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
         this.description = description;
         this.location = location;
+        this.images = images != null ? images : new ArrayList<>();
     }
 
-    @Column(nullable = false)
-    private String name; // e.g., "Sunset Cruise", "Fishing Trip"
-
-    @Column(nullable = false)
-    private int capacity; // Maximum number of passengers
-
-    @Column
-    private String description; // Optional description of the service
-
-    @Column(nullable = false)
-    private String location; // Location of the boat
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -74,5 +77,19 @@ public class Boat {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images != null ? images : new ArrayList<>();
+    }
+
+    // Convenience method
+    public void addImage(Image image) {
+        images.add(image);
+        image.setBoat(this);
     }
 }
