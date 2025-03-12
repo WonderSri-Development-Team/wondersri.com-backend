@@ -20,7 +20,10 @@ public class Admin {
     private String role;  // e.g., "ROLE_ADMIN"
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     public Admin() {
     }
 
@@ -31,6 +34,9 @@ public class Admin {
         this.role = role;
     }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     // Getters and Setters
     public Long getId() { return id; }
