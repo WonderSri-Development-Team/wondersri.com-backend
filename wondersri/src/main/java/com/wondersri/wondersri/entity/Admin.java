@@ -19,11 +19,7 @@ public class Admin {
     @Column(nullable = false)
     private String role;  // e.g., "ROLE_ADMIN"
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
+
     public Admin() {
     }
 
@@ -33,11 +29,7 @@ public class Admin {
         this.password = password;
         this.role = role;
     }
-
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+    
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
