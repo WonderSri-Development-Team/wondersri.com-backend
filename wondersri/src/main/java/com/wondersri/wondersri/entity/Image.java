@@ -6,19 +6,22 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 @Entity
-@Table(name = "admins")
-public class Admin {
+@Table(name = "images")
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
-    private String username;
-    @Column(nullable = false)
-    private String password;
-    @Column(nullable = false)
-    private String role;  // e.g., "ROLE_ADMIN"
 
+    @Column(nullable = false)
+    private String url;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boat_id", nullable = false)
+    private Boat boat;
+
+    public Image(Object o, String url) {
+    }
 }

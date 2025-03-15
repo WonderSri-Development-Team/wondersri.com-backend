@@ -5,24 +5,37 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-@Data
-@NoArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "boats")
 public class Boat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
-    private String name; // e.g., "Sunset Cruise", "Fishing Trip"
+    private String name;
+
     @Column(nullable = false)
-    private int capacity; // Maximum number of passengers
-    @Column(nullable = false)
-    private int price;
+    private int capacity;
+
     @Column
-    private String description; // Optional description of the service
+    private String description;
+
     @Column(nullable = false)
-    private String location; // Location of the boat
+    private String location;
+
+    @OneToMany(mappedBy = "boat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
+
+    public void addImage(Image image) {
+    }
+
+    // Constructors
+
 
 }
