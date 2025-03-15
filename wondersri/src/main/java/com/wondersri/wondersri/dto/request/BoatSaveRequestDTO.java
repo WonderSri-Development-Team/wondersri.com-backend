@@ -35,8 +35,11 @@ public class BoatSaveRequestDTO {
     private List<MultipartFile> images;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Constructors, getters, setters...
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     public List<MultipartFile> getImages() { return images; }

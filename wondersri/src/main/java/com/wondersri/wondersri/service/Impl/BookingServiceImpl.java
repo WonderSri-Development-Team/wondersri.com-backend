@@ -94,8 +94,12 @@ public class BookingServiceImpl implements BookingService {
                 booking.getUserPhone(),
                 booking.getBookingDate(),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 booking.getTimeSlot(),
                 booking.getBookingCode()
+=======
+                booking.getTimeSlot()
+>>>>>>> Stashed changes
 =======
                 booking.getTimeSlot()
 >>>>>>> Stashed changes
