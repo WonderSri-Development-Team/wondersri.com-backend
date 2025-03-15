@@ -26,6 +26,9 @@ public class BoatSaveRequestDTO {
     @Positive(message = "Capacity must be a positive number")
     private int capacity;
 
+    @Positive(message = "price must be a positive number")
+    private String Price;
+
     private String description;
 
     @NotBlank(message = "Location is required")

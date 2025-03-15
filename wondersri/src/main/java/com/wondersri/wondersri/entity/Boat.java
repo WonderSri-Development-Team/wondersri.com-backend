@@ -29,13 +29,12 @@ public class Boat {
     @Column(nullable = false)
     private String location;
 
+    @Column(name = "price", nullable = false, columnDefinition = "varchar(255) default '0'")
+    private String Price;
+
     @OneToMany(mappedBy = "boat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
     public void addImage(Image image) {
     }
-
-    // Constructors
-
-
 }

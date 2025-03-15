@@ -43,6 +43,7 @@ public class BoatServiceImpl implements BoatService {
         boat.setId(boatSaveRequestDTO.getId());
         boat.setName(boatSaveRequestDTO.getName());
         boat.setCapacity(boatSaveRequestDTO.getCapacity());
+        boat.setPrice(boatSaveRequestDTO.getPrice());
         boat.setDescription(boatSaveRequestDTO.getDescription());
         boat.setLocation(boatSaveRequestDTO.getLocation());
 
@@ -84,6 +85,7 @@ public class BoatServiceImpl implements BoatService {
                 boat.getId(),
                 boat.getName(),
                 boat.getCapacity(),
+                boat.getPrice(),
                 boat.getDescription(),
                 boat.getLocation(),
                 imageUrls

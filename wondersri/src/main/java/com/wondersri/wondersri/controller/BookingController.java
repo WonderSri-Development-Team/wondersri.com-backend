@@ -7,11 +7,8 @@ import com.wondersri.wondersri.dto.response.GetBookingByCodeResponseDTO;
 import com.wondersri.wondersri.exception.ResourceNotFoundException;
 import com.wondersri.wondersri.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,7 +23,6 @@ public class BookingController {
     private BookingService bookingService;
 
     @PostMapping("/save-booking")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Map<String, String>> saveBooking(@RequestBody BookingSaveRequestDTO bookingRequestDTO) {
         try {
             bookingService.saveBooking(bookingRequestDTO);
@@ -69,7 +65,6 @@ public class BookingController {
     }
 
     @GetMapping("/all-bookings")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllBookings() {
         try {
             List<BookingAllDetailDTO> bookings = bookingService.getAllBookings();

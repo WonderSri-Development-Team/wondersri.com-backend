@@ -1,8 +1,13 @@
 package com.wondersri.wondersri.service.Impl;
 
+import com.wondersri.wondersri.config.JwtUtil;
+import com.wondersri.wondersri.dto.request.LoginRequestDTO;
+import com.wondersri.wondersri.dto.request.RegisterRequestDTO;
 import com.wondersri.wondersri.entity.Admin;
 import com.wondersri.wondersri.repo.AdminRepository;
 import com.wondersri.wondersri.service.AdminService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,44 +17,49 @@ import java.util.Optional;
 @Service
 public class AdminServiceImpl implements AdminService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
+
     @Autowired
     private AdminRepository adminRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+
     @Override
-    public Admin registerAdmin(Admin admin) {
-        // Check if username already exists
-        Optional<Admin> existingAdmin = adminRepository.findByUsername(admin.getUsername());
+    public Admin registerAdmin(RegisterRequestDTO registerRequestDTO) {
+        logger.info("Registering admin with username: {}", registerRequestDTO.getUsername());
+        Optional<Admin> existingAdmin = adminRepository.findByUsername(registerRequestDTO.getUsername());
         if (existingAdmin.isPresent()) {
-            throw new IllegalArgumentException("Username already exists: " + admin.getUsername());
+            logger.warn("Username already exists: {}", registerRequestDTO.getUsername());
+            throw new IllegalArgumentException("Username already exists: " + registerRequestDTO.getUsername());
         }
-
-        // Encrypt the password before saving
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-
-        // Set default role if not provided
-        if (admin.getRole() == null) {
-            admin.setRole("ROLE_ADMIN");
-        }
-
-        return adminRepository.save(admin);
+        Admin admin = new Admin();
+        admin.setUsername(registerRequestDTO.getUsername());
+        admin.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
+        admin.setRole(registerRequestDTO.getRole() != null ? registerRequestDTO.getRole() : "ROLE_ADMIN");
+        Admin savedAdmin = adminRepository.save(admin);
+        logger.info("Admin registered successfully with ID: {}", savedAdmin.getId());
+        return savedAdmin;
     }
 
     @Override
-    public Admin authenticate(String username, String password) {
-        // Find admin by username
-        Optional<Admin> adminOptional = adminRepository.findByUsername(username);
+    public String authenticate(LoginRequestDTO loginRequestDTO) {
+        logger.info("Attempting to authenticate user: {}", loginRequestDTO.getUsername());
+        Optional<Admin> adminOptional = adminRepository.findByUsername(loginRequestDTO.getUsername());
         if (adminOptional.isEmpty()) {
-            return null; // Username not found
+            logger.warn("Username not found: {}", loginRequestDTO.getUsername());
+            throw new IllegalArgumentException("Invalid credentials");
         }
-
         Admin admin = adminOptional.get();
-        // Verify password
-        if (passwordEncoder.matches(password, admin.getPassword())) {
-            return admin; // Authentication successful
+        if (passwordEncoder.matches(loginRequestDTO.getPassword(), admin.getPassword())) {
+            logger.info("Authentication successful for user: {}", loginRequestDTO.getUsername());
+            return jwtUtil.generateToken(admin.getUsername(), admin.getRole());
         }
-        return null; // Password incorrect
+        logger.warn("Password mismatch for user: {}", loginRequestDTO.getUsername());
+        throw new IllegalArgumentException("Invalid credentials");
     }
 }
