@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<version>1.18.30</version> <!-- Latest stable version as of now -->
 		</dependency>
 
 		<!-- Spring Boot Starter Test for Unit Testing -->
@@ -74,18 +74,14 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Replaced Swagger 2 with Springdoc OpenAPI (Recommended for Spring Boot 2.x) -->
+		<!-- Springdoc OpenAPI for API documentation -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.6</version> <!-- You can check for newer versions -->
+			<version>1.6.6</version> <!-- Check for newer versions if desired -->
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
+
+		<!-- Spring Boot Starter Mail -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
@@ -98,11 +94,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 				<configuration>
+					<source>11</source>
+					<target>11</target>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.30</version> <!-- Match the dependency version -->
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

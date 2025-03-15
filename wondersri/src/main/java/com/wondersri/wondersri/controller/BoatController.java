@@ -27,7 +27,7 @@ public class BoatController {
         this.boatService = boatService;
     }
 
-    @PostMapping
+    @PostMapping("/save-boat")
     public ResponseEntity<String> saveBoat(@Valid @RequestBody BoatSaveRequestDTO boatSaveRequestDTO) {
         logger.info("Received request to save boat: {}", boatSaveRequestDTO);
 
@@ -37,7 +37,7 @@ public class BoatController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/all-boats")
     public ResponseEntity<List<BoatAllDetailResponseDto>> getAllBoats() {
         logger.info("Received request to fetch all boats");
 
