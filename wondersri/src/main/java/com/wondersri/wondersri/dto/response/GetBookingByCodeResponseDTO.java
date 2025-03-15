@@ -16,5 +16,4 @@ public class GetBookingByCodeResponseDTO {
     private String userPhone;
     private LocalDate bookingDate;
     private TimeSlot timeSlot;
-    private String bookingCode;
 }

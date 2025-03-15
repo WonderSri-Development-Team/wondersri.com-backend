@@ -93,8 +93,12 @@ public class BookingServiceImpl implements BookingService {
                 booking.getUserEmail(),
                 booking.getUserPhone(),
                 booking.getBookingDate(),
+<<<<<<< Updated upstream
                 booking.getTimeSlot(),
                 booking.getBookingCode()
+=======
+                booking.getTimeSlot()
+>>>>>>> Stashed changes
         );
     }
 
