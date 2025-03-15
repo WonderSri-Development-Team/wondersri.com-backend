@@ -15,6 +15,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>wondersri</name>
 	<description>Demo project for Spring Boot</description>
+	<url/>
 
 	<properties>
 		<java.version>17</java.version>
@@ -22,25 +23,31 @@
 	</properties>
 
 	<dependencies>
-		<!-- Spring Boot Starter Dependencies -->
+		<!-- Spring Boot Starter Data JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<!-- Spring Boot Starter Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+
+		<!-- Spring Boot Starter Validation -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+		<!-- Spring Boot Starter Web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- PostgreSQL Driver -->
+		<!-- PostgreSQL Driver for Database Connection -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -51,76 +58,38 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 			<version>${lombok.version}</version>
-=======
-			<version>1.18.30</version> <!-- Replace with the latest version -->
->>>>>>> Stashed changes
-=======
-			<version>1.18.30</version> <!-- Replace with the latest version -->
->>>>>>> Stashed changes
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Spring Boot Starter Test -->
+		<!-- Spring Boot Starter Test for Unit Testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
 		<!-- Spring Security Test -->
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 		<!-- Springdoc OpenAPI -->
-=======
-		<!-- OpenAPI/Swagger Integration -->
->>>>>>> Stashed changes
-=======
-		<!-- OpenAPI/Swagger Integration -->
->>>>>>> Stashed changes
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.6.6</version>
 		</dependency>
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 		<!-- Spring Boot Starter Mail -->
-=======
-		<!-- Spring Boot Mail -->
->>>>>>> Stashed changes
-=======
-		<!-- Spring Boot Mail -->
->>>>>>> Stashed changes
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 		<!-- Cloudinary -->
-=======
-		<!-- Cloudinary Integration -->
->>>>>>> Stashed changes
-=======
-		<!-- Cloudinary Integration -->
->>>>>>> Stashed changes
 		<dependency>
 			<groupId>com.cloudinary</groupId>
 			<artifactId>cloudinary-core</artifactId>
@@ -132,15 +101,7 @@
 			<version>1.37.0</version>
 		</dependency>
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 		<!-- Jackson Databind for JSON processing -->
-=======
-		<!-- Jackson Databind -->
->>>>>>> Stashed changes
-=======
-		<!-- Jackson Databind -->
->>>>>>> Stashed changes
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -153,37 +114,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 				<version>3.10.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-=======
-				<version>3.8.1</version> <!-- Compatible with JDK 11 -->
-				<configuration>
-					<source>11</source>
-					<target>11</target>
->>>>>>> Stashed changes
-=======
-				<version>3.8.1</version> <!-- Compatible with JDK 11 -->
-				<configuration>
-					<source>11</source>
-					<target>11</target>
->>>>>>> Stashed changes
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 							<version>${lombok.version}</version>
-=======
-							<version>1.18.30</version> <!-- Replace with the latest version -->
->>>>>>> Stashed changes
-=======
-							<version>1.18.30</version> <!-- Replace with the latest version -->
->>>>>>> Stashed changes
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
@@ -193,6 +132,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
