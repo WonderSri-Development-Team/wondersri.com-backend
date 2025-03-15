@@ -1,5 +1,4 @@
 package com.wondersri.wondersri.config;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,16 +21,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                // Public endpoints
                 .antMatchers("/api/v1/bookings/save-booking").permitAll()
                 .antMatchers("/api/v1/boats/all-boats").permitAll()
+                .antMatchers("/api/v1/boats/front-page").permitAll() // New public endpoint
                 .antMatchers("/api/v1/bookings/booking-by-code/**").permitAll()
                 .antMatchers("/api/auth/login").permitAll()
-                .antMatchers("/api/auth/register").hasRole("ADMIN") // Still public for now
-                // Admin-only endpoints
+                .antMatchers("/api/auth/register").hasRole("ADMIN")
                 .antMatchers("/api/v1/bookings/available-slots").hasRole("ADMIN")
                 .antMatchers("/api/v1/bookings/all-bookings").hasRole("ADMIN")
                 .antMatchers("/api/v1/boats/save-boat").hasRole("ADMIN")
@@ -39,7 +37,7 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .anyRequest().hasRole("ADMIN")
                 .and()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
