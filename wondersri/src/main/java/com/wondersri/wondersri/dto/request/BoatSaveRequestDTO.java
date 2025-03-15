@@ -34,14 +34,7 @@ public class BoatSaveRequestDTO {
     @MinImagesCount(message = "At least 4 images are required")
     private List<MultipartFile> images;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    // Constructors, getters, setters...
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     public List<MultipartFile> getImages() { return images; }
     public void setImages(List<MultipartFile> images) { this.images = images; }
 }
