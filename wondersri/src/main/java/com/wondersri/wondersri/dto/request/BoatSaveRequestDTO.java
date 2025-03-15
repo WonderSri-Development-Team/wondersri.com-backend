@@ -1,5 +1,8 @@
 package com.wondersri.wondersri.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Constraint;
@@ -11,7 +14,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BoatSaveRequestDTO {
     private Long id;
 
@@ -30,25 +35,7 @@ public class BoatSaveRequestDTO {
     private List<MultipartFile> images;
 
     // Constructors, getters, setters...
-    public BoatSaveRequestDTO() {}
-    public BoatSaveRequestDTO(Long id, String name, int capacity, String description, String location, List<MultipartFile> images) {
-        this.id = id;
-        this.name = name;
-        this.capacity = capacity;
-        this.description = description;
-        this.location = location;
-        this.images = images;
-    }
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public int getCapacity() { return capacity; }
-    public void setCapacity(int capacity) { this.capacity = capacity; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
+
     public List<MultipartFile> getImages() { return images; }
     public void setImages(List<MultipartFile> images) { this.images = images; }
 }

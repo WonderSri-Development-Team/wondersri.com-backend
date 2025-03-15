@@ -1,4 +1,5 @@
 package com.wondersri.wondersri.controller;
+
 import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
 import com.wondersri.wondersri.dto.response.BookingAllDetailDTO;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,40 +24,60 @@ public class BookingController {
 
     @Autowired
     private BookingService bookingService;
-    @PostMapping("/Save-booking")
-    public ResponseEntity<String> saveBooking(@RequestBody BookingSaveRequestDTO bookingRequestDTO) {
-        bookingService.saveBooking(bookingRequestDTO);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.TEXT_PLAIN);
-        return new ResponseEntity<>("Booking Confirmed", headers, HttpStatus.CREATED);
-    }
-    @GetMapping("/{bookingCode}")
-    public ResponseEntity<?> getBookingByCode(@PathVariable String bookingCode) {
+
+    @PostMapping("/save-booking")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Map<String, String>> saveBooking(@RequestBody BookingSaveRequestDTO bookingRequestDTO) {
         try {
-             GetBookingByCodeResponseDTO booking = bookingService.getBookingByCode(bookingCode);
-            return ResponseEntity.ok(booking);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            bookingService.saveBooking(bookingRequestDTO);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Booking Confirmed");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error saving booking: " + e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/booking-by-code/{bookingCode}")
+    public ResponseEntity<?> getBookingByCode(@PathVariable String bookingCode) {
+        try {
+            GetBookingByCodeResponseDTO booking = bookingService.getBookingByCode(bookingCode);
+            return ResponseEntity.ok(booking);
+        } catch (ResourceNotFoundException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/available-slots")
-    public ResponseEntity<List<AvailableSlotsResponseDTO>> getAvailableSlots() {
+    public ResponseEntity<?> getAvailableSlots() {
         try {
             List<AvailableSlotsResponseDTO> availableSlots = bookingService.getAvailableSlots();
             return ResponseEntity.ok(availableSlots);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error fetching available slots: " + e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/all-bookings")
-    public ResponseEntity<List<BookingAllDetailDTO>> getAllBookings() {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllBookings() {
         try {
             List<BookingAllDetailDTO> bookings = bookingService.getAllBookings();
             return ResponseEntity.ok(bookings);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error fetching bookings: " + e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // Other endpoints (getAllBookings, getBookingByCode, deleteBooking, etc.)
 }

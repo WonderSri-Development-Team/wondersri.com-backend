@@ -1,4 +1,4 @@
-package com.wondersri.wondersri.service.impl;
+package com.wondersri.wondersri.service.Impl;
 
 import com.wondersri.wondersri.entity.Admin;
 import com.wondersri.wondersri.repo.AdminRepository;

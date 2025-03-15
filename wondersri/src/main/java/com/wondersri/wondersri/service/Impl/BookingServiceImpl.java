@@ -88,15 +88,13 @@ public class BookingServiceImpl implements BookingService {
         String boatName = booking.getBoat() != null ? booking.getBoat().getName() : "Unknown Boat";
 
         return new GetBookingByCodeResponseDTO(
-                booking.getId(),
                 boatName,
                 booking.getUserName(),
                 booking.getUserEmail(),
                 booking.getUserPhone(),
                 booking.getBookingDate(),
                 booking.getTimeSlot(),
-                booking.getBookingCode(),
-                booking.getStatus()
+                booking.getBookingCode()
         );
     }
 
