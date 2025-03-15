@@ -3,7 +3,6 @@ import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
 import com.wondersri.wondersri.dto.response.BookingAllDetailDTO;
 import com.wondersri.wondersri.dto.response.GetBookingByCodeResponseDTO;
-import com.wondersri.wondersri.entity.Booking;
 import com.wondersri.wondersri.exception.ResourceNotFoundException;
 import com.wondersri.wondersri.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/bookings")
+@RequestMapping("/api/v1/bookings")
 public class BookingController {
 
     @Autowired
     private BookingService bookingService;
-    @PostMapping
+    @PostMapping("/Save-booking")
     public ResponseEntity<String> saveBooking(@RequestBody BookingSaveRequestDTO bookingRequestDTO) {
         bookingService.saveBooking(bookingRequestDTO);
         HttpHeaders headers = new HttpHeaders();
