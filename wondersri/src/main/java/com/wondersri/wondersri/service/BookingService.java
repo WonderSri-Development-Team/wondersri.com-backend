@@ -4,6 +4,7 @@ import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
 import com.wondersri.wondersri.dto.response.BookingAllDetailDTO;
 import com.wondersri.wondersri.dto.response.GetBookingByCodeResponseDTO;
+import com.wondersri.wondersri.dto.response.GetBookingByEmailResponseDTO;
 import com.wondersri.wondersri.entity.Booking;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface BookingService {
     List<AvailableSlotsResponseDTO> getAvailableSlots();
 
     List<BookingAllDetailDTO> getAllBookings();
+
+    GetBookingByEmailResponseDTO getBookingByemail(String email);
 }

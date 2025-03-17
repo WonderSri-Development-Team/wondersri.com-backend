@@ -4,6 +4,7 @@ import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
 import com.wondersri.wondersri.dto.response.BookingAllDetailDTO;
 import com.wondersri.wondersri.dto.response.GetBookingByCodeResponseDTO;
+import com.wondersri.wondersri.dto.response.GetBookingByEmailResponseDTO;
 import com.wondersri.wondersri.exception.ResourceNotFoundException;
 import com.wondersri.wondersri.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,17 @@ public class BookingController {
     public ResponseEntity<?> getBookingByCode(@PathVariable String bookingCode) {
         try {
             GetBookingByCodeResponseDTO booking = bookingService.getBookingByCode(bookingCode);
+            return ResponseEntity.ok(booking);
+        } catch (ResourceNotFoundException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/booking-by-email/{email}")
+    public ResponseEntity<?> getBookingByEmail(@PathVariable String email) {
+        try {
+            GetBookingByEmailResponseDTO booking = bookingService.getBookingByemail(email);
             return ResponseEntity.ok(booking);
         } catch (ResourceNotFoundException e) {
             Map<String, String> error = new HashMap<>();

@@ -5,6 +5,7 @@ import com.wondersri.wondersri.dto.request.BookingSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.AvailableSlotsResponseDTO;
 import com.wondersri.wondersri.dto.response.BookingAllDetailDTO;
 import com.wondersri.wondersri.dto.response.GetBookingByCodeResponseDTO;
+import com.wondersri.wondersri.dto.response.GetBookingByEmailResponseDTO;
 import com.wondersri.wondersri.entity.Booking;
 import com.wondersri.wondersri.entity.Boat;
 import com.wondersri.wondersri.Enum.TimeSlot;
@@ -145,5 +146,23 @@ public class BookingServiceImpl implements BookingService {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public GetBookingByEmailResponseDTO getBookingByemail(String email) {
+        Booking booking = bookingRepository.findByBookingCode(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with code: " + email));
+
+        // Assuming Boat entity has a getName() method
+        String boatName = booking.getBoat() != null ? booking.getBoat().getName() : "Unknown Boat";
+
+        return new GetBookingByEmailResponseDTO(
+                boatName,
+                booking.getUserName(),
+                booking.getUserEmail(),
+                booking.getUserPhone(),
+                booking.getBookingDate(),
+                booking.getTimeSlot()
+        );
     }
 }
