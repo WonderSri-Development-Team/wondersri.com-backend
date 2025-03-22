@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,13 +31,14 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public String uploadImage(MultipartFile image) {
         logger.info("Attempting to upload image");
 
         try {
             if (image == null || image.isEmpty()) {
-                logger.warn("Image is null or empty, returning default URL");
-                return "http://example.com/default-image.jpg";
+                logger.warn("Image is null or empty");
+                throw new IllegalArgumentException("Image file is required");
             }
 
             // Upload to Cloudinary
@@ -44,12 +46,7 @@ public class ImageServiceImpl implements ImageService {
             String url = (String) uploadResult.get("url");
             logger.info("Image uploaded successfully to Cloudinary: {}", url);
 
-            // Save to database
-            Image imageEntity = new Image(null, url);
-            imageRepository.save(imageEntity);
-            logger.info("Image saved to database with ID: {}", imageEntity.getId());
-
-            return url;
+            return url; // Return the URL only
         } catch (IOException e) {
             logger.error("Failed to upload image to Cloudinary: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to upload image: " + e.getMessage(), e);

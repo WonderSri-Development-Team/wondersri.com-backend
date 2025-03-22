@@ -50,10 +50,9 @@ public class BoatServiceImpl implements BoatService {
         List<MultipartFile> images = boatSaveRequestDTO.getImages();
         if (images != null && !images.isEmpty()) {
             for (MultipartFile file : images) {
-                String imageUrl = uploadImage(file);
-                Image image = new Image(null, imageUrl);
-                image.setBoat(boat);
-                boat.addImage(image);
+                String imageUrl = uploadImage(file); // Upload the image and get the URL
+                Image image = new Image(imageUrl, boat); // Pass the URL and the Boat object
+                boat.addImage(image); // Add the image to the boat
             }
         }
 

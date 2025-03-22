@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Entity
 @Table(name = "boats")
 public class Boat {
@@ -30,11 +31,14 @@ public class Boat {
     private String location;
 
     @Column(name = "price", nullable = false, columnDefinition = "varchar(255) default '0'")
-    private String Price;
+    private String price;
 
     @OneToMany(mappedBy = "boat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    // Helper method to add images
     public void addImage(Image image) {
+        images.add(image);
+        image.setBoat(this);
     }
 }
