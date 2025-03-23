@@ -28,9 +28,10 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/boats/all-boats").permitAll()
                 .antMatchers("/api/v1/boats/front-page").permitAll() // New public endpoint
                 .antMatchers("/api/v1/bookings/booking-by-code/**").permitAll()
+                .antMatchers("/api/v1/bookings/booking-by-email/**").permitAll()
                 .antMatchers("/api/auth/login").permitAll()
                 .antMatchers("/api/auth/register").hasRole("ADMIN")
-                .antMatchers("/api/v1/bookings/available-slots").hasRole("ADMIN")
+                .antMatchers("/api/v1/bookings/available-slots").permitAll()
                 .antMatchers("/api/v1/bookings/all-bookings").hasRole("ADMIN")
                 .antMatchers("/api/v1/boats/save-boat").permitAll()
                 .antMatchers("/api/v1/images/upload").permitAll()
