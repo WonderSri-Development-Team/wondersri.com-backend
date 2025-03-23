@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin(origins = "https://wondersri.com")
 @RestController
 @RequestMapping("/api/v1/bookings")
 public class BookingController {
