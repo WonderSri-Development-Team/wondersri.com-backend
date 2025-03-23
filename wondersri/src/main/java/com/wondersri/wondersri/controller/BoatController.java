@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
-@CrossOrigin(origins = "https://wondersri.com")
+@CrossOrigin(origins = "https://www.wondersri.com/")
 @RestController
 @RequestMapping("/api/v1/boats")
 public class BoatController {
