@@ -2,6 +2,7 @@ package com.wondersri.wondersri.controller;
 
 import com.wondersri.wondersri.dto.request.BoatSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.BoatAllDetailResponseDto;
+import com.wondersri.wondersri.dto.response.BoatResponseDTO;
 import com.wondersri.wondersri.service.BoatService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,5 +57,17 @@ public class BoatController {
         List<BoatAllDetailResponseDto> boats = boatService.getAllBoatsDetails();
         logger.info("Fetched {} boats", boats.size());
         return new ResponseEntity<>(boats, HttpStatus.OK);
+    }
+    @GetMapping("/front-page")
+    public ResponseEntity<List<BoatResponseDTO>> getFrontPageBoats() {
+        logger.info("Fetching 5 boats for front page");
+        try {
+            List<BoatResponseDTO> boats = boatService.getFrontPageBoats();
+            logger.info("Successfully fetched {} boats for front page", boats.size());
+            return new ResponseEntity<>(boats, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error fetching front page boats: {}", e.getMessage(), e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

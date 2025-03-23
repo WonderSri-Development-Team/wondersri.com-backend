@@ -21,18 +21,16 @@ public class EmailServiceImpl implements EmailService {
                                              String boatName, String boatLocation, String bookingDate,
                                              String timeSlot) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true for multipart
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
         helper.setTo(toEmail);
         helper.setSubject("Booking Confirmation - WonderSri");
-        helper.setFrom("wordersri.services@gmail.com"); // Use your configured email
+        helper.setFrom("wordersri.services@gmail.com");
 
-        // Generate HTML content by replacing placeholders
         String htmlContent = getBookingConfirmationHtml(bookingCode, userName, boatName, boatLocation, bookingDate, timeSlot);
-        helper.setText(htmlContent, true); // true indicates HTML content
+        helper.setText(htmlContent, true);
 
-        // Attach the logo image as an inline resource
-        ClassPathResource logoImage = new ClassPathResource("static/wondersri-logo.png"); // Adjust path if different
+        ClassPathResource logoImage = new ClassPathResource("static/wondersri-logo.png");
         helper.addInline("logoImage", logoImage);
 
         mailSender.send(mimeMessage);
@@ -40,7 +38,6 @@ public class EmailServiceImpl implements EmailService {
 
     private String getBookingConfirmationHtml(String bookingCode, String userName, String boatName,
                                               String boatLocation, String bookingDate, String timeSlot) {
-        // Your HTML template with placeholders replaced
         String htmlTemplate =
                 "<!DOCTYPE html>" +
                         "<html lang=\"en\">" +
@@ -162,7 +159,6 @@ public class EmailServiceImpl implements EmailService {
                         "</body>" +
                         "</html>";
 
-        // Replace placeholders with actual values
         return htmlTemplate
                 .replace("{{userName}}", userName)
                 .replace("{{bookingCode}}", bookingCode)

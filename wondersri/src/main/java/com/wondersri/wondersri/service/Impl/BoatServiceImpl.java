@@ -4,6 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.wondersri.wondersri.dto.request.BoatSaveRequestDTO;
 import com.wondersri.wondersri.dto.response.BoatAllDetailResponseDto;
+import com.wondersri.wondersri.dto.response.BoatResponseDTO;
 import com.wondersri.wondersri.entity.Boat;
 import com.wondersri.wondersri.entity.Image;
 import com.wondersri.wondersri.exception.ResourceNotFoundException;
@@ -38,21 +39,20 @@ public class BoatServiceImpl implements BoatService {
     @Override
     public String saveBoat(BoatSaveRequestDTO boatSaveRequestDTO) {
         logger.info("Saving boat with name: {}", boatSaveRequestDTO.getName());
-
         Boat boat = new Boat();
         boat.setId(boatSaveRequestDTO.getId());
         boat.setName(boatSaveRequestDTO.getName());
         boat.setCapacity(boatSaveRequestDTO.getCapacity());
+        boat.setPrice(boatSaveRequestDTO.getPrice());
         boat.setDescription(boatSaveRequestDTO.getDescription());
         boat.setLocation(boatSaveRequestDTO.getLocation());
 
         List<MultipartFile> images = boatSaveRequestDTO.getImages();
         if (images != null && !images.isEmpty()) {
             for (MultipartFile file : images) {
-                String imageUrl = uploadImage(file);
-                Image image = new Image(null, imageUrl);
-                image.setBoat(boat);
-                boat.addImage(image);
+                String imageUrl = uploadImage(file); // Upload the image and get the URL
+                Image image = new Image(imageUrl, boat); // Pass the URL and the Boat object
+                boat.addImage(image); // Add the image to the boat
             }
         }
 
@@ -65,14 +65,24 @@ public class BoatServiceImpl implements BoatService {
     public List<BoatAllDetailResponseDto> getAllBoatsDetails() {
         logger.info("Fetching all boats");
         List<Boat> boats = boatRepository.findAll();
-
         if (boats.isEmpty()) {
             logger.warn("No boats found in the database");
             throw new ResourceNotFoundException("No boats found!");
         }
-
         return boats.stream()
                 .map(this::mapToBoatAllDetailResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BoatResponseDTO> getFrontPageBoats() {
+        logger.info("Fetching 5 boats for front page");
+        List<Boat> boats = boatRepository.findAll()
+                .stream()
+                .limit(5) // Limits to 5 boats
+                .collect(Collectors.toList());
+        return boats.stream()
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -84,6 +94,23 @@ public class BoatServiceImpl implements BoatService {
                 boat.getId(),
                 boat.getName(),
                 boat.getCapacity(),
+                boat.getPrice(),
+                boat.getDescription(),
+                boat.getLocation(),
+                imageUrls
+        );
+    }
+
+    public BoatResponseDTO convertToDTO(Boat boat) {
+        logger.debug("Converting boat ID {} to DTO", boat.getId());
+        List<String> imageUrls = boat.getImages().stream()
+                .map(Image::getUrl)
+                .collect(Collectors.toList());
+        return new BoatResponseDTO(
+                boat.getId(),
+                boat.getName(),
+                boat.getCapacity(),
+                boat.getPrice(),
                 boat.getDescription(),
                 boat.getLocation(),
                 imageUrls

@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-@AllArgsConstructor
+
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "images")
@@ -22,6 +23,9 @@ public class Image {
     @JoinColumn(name = "boat_id", nullable = false)
     private Boat boat;
 
-    public Image(Object o, String url) {
+    // Proper constructor
+    public Image(String url, Boat boat) {
+        this.url = url;
+        this.boat = boat;
     }
 }
