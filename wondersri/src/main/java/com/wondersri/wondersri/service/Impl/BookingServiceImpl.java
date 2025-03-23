@@ -60,7 +60,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         // Valid promo codes
-        List<String> validPromoCodes = Arrays.asList("DISCOUNT10", "SAVE20", "FREETRIP");
+        List<String> validPromoCodes = Arrays.asList("IIT_DISCOUNT_001", "SAVE20", "FREETRIP");
         String promoCode = bookingSaveRequestDTO.getPromoCode();
         if (promoCode != null && !promoCode.isEmpty() && !validPromoCodes.contains(promoCode)) {
             throw new IllegalArgumentException("Invalid promotional code: " + promoCode);
