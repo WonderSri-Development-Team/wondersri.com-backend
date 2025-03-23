@@ -1,8 +1,12 @@
-FROM maven:2.7.14-openjdk-17 AS build
+# Build stage
+FROM maven:3.8.6-openjdk-17 AS build
+WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/demo-o.o.1-SNAPSHOT.jar demo.jar
-EXPOSE=8081
-ENTRYPOINT["java","-jar","demo.jar"]
+# Runtime stage
+FROM openjdk:17-slim-buster
+WORKDIR /app
+COPY --from=build /app/target/wondersri-0.0.1-SNAPSHOT.jar wondersri.jar
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "wondersri.jar"]
