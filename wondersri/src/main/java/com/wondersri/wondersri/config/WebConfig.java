@@ -1,4 +1,4 @@
-package com.wondersri.config;
+package com.wondersri.wondersri.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
